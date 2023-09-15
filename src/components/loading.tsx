@@ -9,7 +9,7 @@ export const Loading = () => {
   useEffect(() => {
     setTimeout(() => {
       setSecond((prev) => !prev);
-    }, 40);
+    }, 50);
     setTimeout(() => {
       setThird((prev) => !prev);
     }, 80);
@@ -17,15 +17,15 @@ export const Loading = () => {
 
   return (
     <div className="my-36 mx-auto w-32">
-      <div className="inline-block w-3 h-3 mx-3 bg-red-600 rounded-full animate-[up_.5s_infinite]"></div>
+      <div className="inline-block w-3 h-3 mx-3 bg-red-600 rounded-full animate-bounce"></div>
       <div
         className={`inline-block w-3 h-3 mx-3 bg-red-600 rounded-full ${
-          second && "animate-up"
+          second && "animate-bounce"
         }`}
       ></div>
       <div
         className={`inline-block w-3 h-3 mx-3 bg-red-600 rounded-full ${
-          third && "animate-up"
+          third && "animate-bounce"
         }`}
       ></div>
     </div>

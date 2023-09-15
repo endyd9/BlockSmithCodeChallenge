@@ -7,8 +7,9 @@ import { NoticeResponse } from "../page";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Loading } from "@/components/loading";
-import DatePicker from "react-datepicker";
-
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { ko } from "date-fns/locale";
 
 const LazyEditor = dynamic(() => import("@/components/editor"), {
   ssr: false,
@@ -72,10 +73,11 @@ export default function EditNotice() {
       />
       <div>
         {changeDate === true ? (
-          <DatePicker
+          <ReactDatePicker
             selected={new Date(new Date(date).toLocaleDateString("ko"))}
-            onChange={(data: string) => setDate(data)}
+            onChange={(data) => setDate(data + "")}
             dateFormat={"yyyy.MM.dd"}
+            locale={ko}
           />
         ) : (
           <span

@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const LazyEditor = dynamic(() => import("@/components/editor"), {
   ssr: false,
-  loading: () => <Loading />
+  loading: () => <Loading />,
 });
 
 export default function EditNotice() {
