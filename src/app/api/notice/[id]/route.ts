@@ -48,10 +48,24 @@ export async function DELETE(
 }
 
 export async function PATCH(req: Request) {
-  const { id, title, content } = await req.json();
+  const { id, title, content, changeDate, updatedAt } = await req.json();
 
   try {
-    await client.$executeRaw`update notice set "title" = ${title}, "content" = ${content}, "updatedAt" = current_timestamp where id = ${+id}`;
+    if (!changeDate) {
+      await client.$executeRaw`update notice set "title" = ${title}, "content" = ${content}, "updatedAt" = current_timestamp where id = ${+id}`;
+    } else {
+      await client.notice.update({
+        where: {
+          id: +id,
+        },
+        data: {
+          title,
+          content,
+          updatedAt,
+        },
+      });
+    }
+
     return NextResponse.json({
       ok: true,
     });

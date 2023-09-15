@@ -1,8 +1,10 @@
 "use client";
 
+import { Loading } from "@/components/loading";
 import { CNotice } from "@/components/notice";
 import { Pagination } from "@/components/pagination";
 import axios from "axios";
+import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 
 export interface INotice {
@@ -43,14 +45,18 @@ const Notice = () => {
   };
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    if (search === "") return alert("검색어를 입력해 주세요");
-    setLoading((prev) => !prev);
     event.preventDefault();
+    if (search === "") {
+      alert("검색어를 입력해 주세요");
+      return;
+    }
+    setLoading((prev) => !prev);
     try {
       const { data } = await axios.get<NoticeResponse>(
         `api/notice?page=${page}&&keyword=${search}`
       );
       setNotices([...data.notices]);
+      setTotalPage(data.totalPage);
     } catch (error) {
       alert("데이터를 불러오지 못 했습니다. \n 잠시 후 다시 시도해주세요.");
     }
@@ -80,7 +86,9 @@ const Notice = () => {
   return (
     <main className="max-w-screen-lg mx-auto mt-20">
       <div className="w-full flex items-start justify-between my-10">
-        <h1 className="text-3xl">공지사항</h1>
+        <h1 className="text-3xl">
+          공지사항 <Link href={"/notice/write"}>+</Link>
+        </h1>
         <div className="relative">
           <form onSubmit={onSubmit}>
             <input
@@ -154,7 +162,7 @@ const Notice = () => {
                   key={notice.id}
                   id={notice.id}
                   title={notice.title}
-                  createdAt={notice.updatedAt}
+                  createdAt={notice.createdAt}
                 />
               ))}
             </div>
@@ -166,7 +174,7 @@ const Notice = () => {
             </div>
           )
         ) : (
-          <div className="my-36 w-10 h-10 animate-spin">임시 로딩</div>
+          <Loading />
         )}
       </div>
       <hr />

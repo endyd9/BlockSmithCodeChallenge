@@ -27,7 +27,7 @@ export const CNotice: React.FC<NoticeProps> = ({ id, title, createdAt }) => {
     }
   };
   return (
-    <Link href={`notice/${id}`} replace>
+    <Link href={`notice/${id}`}>
       <div className="w-full my-5 px-3 py-2 hover:bg-[#EFF0F3] cursor-pointer">
         <h1 className="break-all">
           {title.length > 100 ? title.slice(0, 100) : title}

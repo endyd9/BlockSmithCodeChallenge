@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { INotice } from "../page";
 import Link from "next/link";
@@ -13,8 +13,6 @@ export interface NoticeResponse {
 export default function noticeDetail() {
   const { id } = useParams();
   const [data, setData] = useState<INotice>();
-
-  const router = useRouter();
 
   const getData = async () => {
     const { data: response } = await axios.get<NoticeResponse>(
@@ -45,7 +43,7 @@ export default function noticeDetail() {
         <>
           <h1 className="text-3xl">{data.title}</h1>
           <span className="opacity-30 my-4 block">
-            {new Date(data.createdAt).toLocaleDateString("ko").slice(0, -1)}
+            {new Date(data.updatedAt).toLocaleDateString("ko").slice(0, -1)}
           </span>
           <hr />
           <div className="my-10">

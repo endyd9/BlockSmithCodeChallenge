@@ -11,11 +11,12 @@ export async function GET(req: Request, context: any) {
   const keyword = searchParams.get("keyword");
 
   let query: Prisma.noticeFindManyArgs = {};
+  let cntQuery: Prisma.noticeCountArgs = {};
   switch (keyword !== null && keyword !== "") {
     case false:
       query = {
         orderBy: {
-          updatedAt: "desc",
+          createdAt: "desc",
         },
         take: 10,
         skip: (+page! - 1) * 10,
@@ -38,7 +39,7 @@ export async function GET(req: Request, context: any) {
           ],
         },
         orderBy: {
-          updatedAt: "desc",
+          createdAt: "desc",
         },
         take: 10,
         skip: (+page! - 1) * 10,
@@ -47,7 +48,8 @@ export async function GET(req: Request, context: any) {
   try {
     const notices = await client.notice.findMany(query);
 
-    const totalNotice = await client.notice.count();
+    const totalNotice = await client.notice.count(cntQuery);
+
     const totalPage = Math.ceil(totalNotice / 10);
 
     return res.json({
@@ -67,7 +69,6 @@ export async function POST(req: Request) {
   try {
     const notice: INotice[] =
       await client.$queryRaw`insert into notice ("createdAt", "updatedAt", "title", "content") values (current_timestamp, current_timestamp, ${title}, ${content}) RETURNING *`;
-
 
     return res.json({
       ok: true,

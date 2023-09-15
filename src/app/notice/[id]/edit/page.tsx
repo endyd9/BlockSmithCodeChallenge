@@ -1,11 +1,19 @@
 "use client";
 
-import ClassicEditor from "@ckeditor/ckeditor5-39";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
 import axios from "axios";
-import { useParams} from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NoticeResponse } from "../page";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import { Loading } from "@/components/loading";
+import DatePicker from "react-datepicker";
+
+
+const LazyEditor = dynamic(() => import("@/components/editor"), {
+  ssr: false,
+  loading: () => <Loading />,
+});
 
 export default function EditNotice() {
   const params = useParams();
@@ -13,9 +21,10 @@ export default function EditNotice() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState("1");
   const [loading, setLoading] = useState(false);
 
+  const [changeDate, setChangeDate] = useState(false);
 
   const getData = async () => {
     setLoading((prev) => !prev);
@@ -23,9 +32,13 @@ export default function EditNotice() {
     if (data.notice) {
       setTitle(data.notice.title);
       setContent(data.notice.content);
-      setDate(data.notice.createdAt);
+      setDate(data.notice.updatedAt);
     }
     setLoading((prev) => !prev);
+  };
+
+  const onChange = (data: string) => {
+    setContent(() => data);
   };
 
   const onSaveClick = async () => {
@@ -33,6 +46,8 @@ export default function EditNotice() {
       id,
       title,
       content,
+      updatedAt: new Date(date).toISOString(),
+      changeDate,
     });
 
     if (data.ok) {
@@ -55,28 +70,34 @@ export default function EditNotice() {
         onChange={(event) => setTitle(event.target.value)}
         rows={3}
       />
-      <span className="opacity-50 mb-4 block">
-        {new Date(date).toLocaleDateString("ko").slice(0, -1)}
-      </span>
+      <div>
+        {changeDate === true ? (
+          <DatePicker
+            selected={new Date(new Date(date).toLocaleDateString("ko"))}
+            onChange={(data: string) => setDate(data)}
+            dateFormat={"yyyy.MM.dd"}
+          />
+        ) : (
+          <span
+            onClick={() => setChangeDate((prev) => !prev)}
+            className="text-gray-400 cursor-pointer"
+          >
+            {new Date(date).toLocaleDateString("ko")}
+          </span>
+        )}
+      </div>
       <hr />
       <div className="h-96">
-        <CKEditor
-          editor={ClassicEditor}
-          data={content}
-          onChange={(_, editor) => {
-            const data = editor.getData();
-            setContent(data);
-          }}
-        />
+        <LazyEditor content={content} onChange={onChange} />
       </div>
       <hr />
       <div className="my-10">
-        <button
+        <Link
+          href={`/notice/${id}`}
           className="m-3 py-2 px-3 border border-opacity-75 rounded-md"
-          onClick={() => (window.location.href = `/notice/${id}`)}
         >
           취소
-        </button>
+        </Link>
         <button
           onClick={onSaveClick}
           className="m-3 py-2 px-3 border border-opacity-75 rounded-md bg-[#FF5C00] text-white"

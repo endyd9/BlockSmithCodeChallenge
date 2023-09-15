@@ -1,5 +1,5 @@
 {
-  "name": "black_smith_code_challenge",
+  "name": "block_smith_code_challenge",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,17 +11,18 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^39.0.2",
     "@ckeditor/ckeditor5-react": "^6.1.0",
-    "@ckeditor/ckeditor5-upload": "^39.0.2",
     "@prisma/client": "^5.3.0",
     "@types/node": "20.6.0",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
     "axios": "^1.5.0",
+    "date-fns": "^2.30.0",
     "next": "13.4.19",
     "postcss": "8.4.29",
     "prisma": "^5.3.0",
     "react": "18.2.0",
+    "react-datepicker": "^4.18.0",
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2"

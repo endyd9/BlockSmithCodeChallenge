@@ -1,9 +1,15 @@
 "use client";
 
-import ClassicEditor from "@ckeditor/ckeditor5-39";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { Loading } from "@/components/loading";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useState } from "react";
+
+const LazyEditor = dynamic(() => import("@/components/editor"), {
+  ssr: false,
+  loading: () => <Loading />
+});
 
 export default function EditNotice() {
   const [title, setTitle] = useState("");
@@ -21,6 +27,9 @@ export default function EditNotice() {
       window.location.href = `/notice/${data.id}`;
     }
   };
+  const onChange = (data: string) => {
+    setContent(() => data);
+  };
 
   return (
     <main className="max-w-screen-lg mx-auto my-16">
@@ -37,23 +46,16 @@ export default function EditNotice() {
       </span>
       <hr />
       <div className="h-96">
-        <CKEditor
-          editor={ClassicEditor}
-          data={content}
-          onChange={(_, editor) => {
-            const data = editor.getData();
-            setContent(data);
-          }}
-        />
+        <LazyEditor content={content} onChange={onChange} />
       </div>
       <hr />
       <div className="my-10">
-        <button
+        <Link
+          href={"/notice"}
           className="m-3 py-2 px-3 border border-opacity-75 rounded-md"
-          onClick={() => (window.location.href = `/notice`)}
         >
           취소
-        </button>
+        </Link>
         <button
           onClick={onSaveClick}
           className="m-3 py-2 px-3 border border-opacity-75 rounded-md bg-[#FF5C00] text-white"
