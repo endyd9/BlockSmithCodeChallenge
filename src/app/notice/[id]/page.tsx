@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { INotice } from "../page";
 import Link from "next/link";
+import { Loading } from "@/components/loading";
 
 export interface NoticeResponse {
   ok: boolean;
@@ -13,12 +14,15 @@ export interface NoticeResponse {
 export default function noticeDetail() {
   const { id } = useParams();
   const [data, setData] = useState<INotice>();
+  const [loading, setLoading] = useState(false);
 
   const getData = async () => {
+    setLoading((prev) => !prev);
     const { data: response } = await axios.get<NoticeResponse>(
       `/api/notice/${id}`
     );
     setData({ ...response.notice });
+    setLoading((prev) => !prev);
   };
 
   const onDeleteClick = async () => {
@@ -39,7 +43,7 @@ export default function noticeDetail() {
   return (
     <main className="max-w-screen-lg mx-auto my-16">
       <h3 className=" mb-5">공지사항</h3>
-      {data && (
+      {data && !loading ? (
         <>
           <h1 className="text-3xl">{data.title}</h1>
           <span className="opacity-30 my-4 block">
@@ -50,6 +54,8 @@ export default function noticeDetail() {
             <p dangerouslySetInnerHTML={{ __html: data.content }} />
           </div>
         </>
+      ) : (
+        <Loading />
       )}
       <hr />
       <div className="flex">
