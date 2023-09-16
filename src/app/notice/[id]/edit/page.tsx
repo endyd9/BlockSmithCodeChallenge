@@ -23,19 +23,16 @@ export default function EditNotice() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [date, setDate] = useState("1");
-  const [loading, setLoading] = useState(false);
 
   const [changeDate, setChangeDate] = useState(false);
 
   const getData = async () => {
-    setLoading((prev) => !prev);
     const { data } = await axios.get<NoticeResponse>(`/api/notice/${id}`);
     if (data.notice) {
       setTitle(data.notice.title);
       setContent(data.notice.content);
       setDate(data.notice.updatedAt);
     }
-    setLoading((prev) => !prev);
   };
 
   const onChange = (data: string) => {
@@ -65,11 +62,16 @@ export default function EditNotice() {
     <main className="max-w-screen-lg mx-auto my-16">
       <h3 className=" mb-5">공지사항</h3>
       <textarea
-        className="text-3xl w-full h-fit p-3 resize-none border border-black rounded-md"
+        className="text-3xl w-full h-auto p-3 resize-none border border-black rounded-md"
         name="title"
         value={title}
-        onChange={(event) => setTitle(event.target.value)}
-        rows={3}
+        onChange={(event) => {
+          if (event.target.value.length > 100) {
+            setTitle(event.target.value.slice(0, 100));
+            return;
+          }
+          setTitle(event.target.value);
+        }}
       />
       <div>
         {changeDate === true ? (

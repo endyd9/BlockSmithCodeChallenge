@@ -19,7 +19,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <div className="flex items-center justify-between mx-auto max-w-xs">
+    <div className="flex justify-between mx-auto w-40">
       <div>
         <button onClick={() => changePage(currentPage - 5)}>
           <svg
@@ -60,7 +60,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           </svg>
         </button>
       </div>
-      {pages.map((page, index) => (
+      {pages.map((page) => (
         <button
           onClick={() => changePage(page)}
           key={page}
