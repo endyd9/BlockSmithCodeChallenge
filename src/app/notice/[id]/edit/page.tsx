@@ -26,6 +26,8 @@ export default function EditNotice() {
 
   const [changeDate, setChangeDate] = useState(false);
 
+  const [canClick, setCanCilck] = useState(true);
+
   const getData = async () => {
     const { data } = await axios.get<NoticeResponse>(`/api/notice/${id}`);
     if (data.notice) {
@@ -40,6 +42,7 @@ export default function EditNotice() {
   };
 
   const onSaveClick = async () => {
+    setCanCilck((priv) => !priv);
     const { data } = await axios.patch(`/api/notice/${id}`, {
       id,
       title,
@@ -49,8 +52,9 @@ export default function EditNotice() {
     });
 
     if (data.ok) {
+      setCanCilck((priv) => !priv);
       alert("수정되었습니다.");
-      window.location.href = `/notice/${id}`;
+      return window.location.href = `/notice/${id}`;
     }
   };
 
@@ -104,7 +108,9 @@ export default function EditNotice() {
         </Link>
         <button
           onClick={onSaveClick}
-          className="m-3 py-2 px-3 border border-opacity-75 rounded-md bg-[#FF5C00] text-white"
+          className={`m-3 py-2 px-3 border border-opacity-75 rounded-md bg-[#FF5C00] text-white ${
+            !canClick && "bg-gray-300 pointer-events-none"
+          }`}
         >
           저장
         </button>

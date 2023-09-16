@@ -15,14 +15,16 @@ export default function EditNotice() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const onSaveClick = async () => {
-    console.log(title, content);
+  const [canClick, setCanCilck] = useState(true);
 
+  const onSaveClick = async () => {
+    setCanCilck(priv => !priv)
     const { data } = await axios.post("/api/notice", {
       title,
       content,
     });
     if (data.ok) {
+      setCanCilck(priv => !priv)
       alert("저장되었습니다.");
       window.location.href = `/notice/${data.id}`;
     }
@@ -58,7 +60,9 @@ export default function EditNotice() {
         </Link>
         <button
           onClick={onSaveClick}
-          className="m-3 py-2 px-3 border border-opacity-75 rounded-md bg-[#FF5C00] text-white"
+          className={`m-3 py-2 px-3 border border-opacity-75 rounded-md bg-[#FF5C00] text-white ${
+            !canClick && "bg-gray-300 pointer-events-none"
+          }`}
         >
           저장
         </button>
